@@ -1,6 +1,7 @@
 const path = require('path')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin  = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   //构建入口地址，可以是数组
@@ -13,7 +14,11 @@ module.exports = {
       new HtmlWebpackPlugin({         //当入口文件产生变化时，index.html应用的目录将自动更新，而不需要人工修改
         title:'production'
       }),
-      new webpack.HashedModuleIdsPlugin() //对于第三方lib，vendor文件我们不希望每次构建都是重新产生，且更新缓存，使用该插件来避免
+      new webpack.HashedModuleIdsPlugin(), //对于第三方lib，vendor文件我们不希望每次构建都是重新产生，且更新缓存，使用该插件来避免
+      new webpack.ExtractTextPlugin({ //提取css，配合在loader中使用，把零散的css文件管理起来
+        filename:'[name].[hash].js',
+        allChunks:true
+      })
   ],
   resolve: {
     extensions: ['.js', '.vue', '.json'],  //当项目中引入没有带后缀文件时，优先按照这个来找对应文件，如果都找不到，侧报错
